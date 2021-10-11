@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:manejo_estados/models/usuario.dart';
+import 'package:manejo_estados/services/usuario_service.dart';
 
 class Pagina1Page extends StatelessWidget {
   @override
@@ -8,7 +10,18 @@ class Pagina1Page extends StatelessWidget {
         title: Text('Página 1'),
         centerTitle: true,
       ),
-      body: HojaDeVidaUsuario(),
+      body: StreamBuilder(
+        stream: usuarioService.usuarioStream,
+        builder: (BuildContext context, AsyncSnapshot<Usuario> snapshot) {
+          return snapshot.hasData
+              ? HojaDeVidaUsuario(
+                  usuario: snapshot.data!,
+                )
+              : const Center(
+                  child: Text('No hay información de usuario'),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.navigate_next),
           onPressed: () => Navigator.pushNamed(context, 'pag2')),
@@ -17,6 +30,9 @@ class Pagina1Page extends StatelessWidget {
 }
 
 class HojaDeVidaUsuario extends StatelessWidget {
+  final Usuario usuario;
+  const HojaDeVidaUsuario({required this.usuario});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -27,26 +43,26 @@ class HojaDeVidaUsuario extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Datos personales
-            Text(
+            const Text(
               'Datos Personales',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text('Nombre:'),
-              subtitle: Text('Oscar David Giraldo Velasco'),
+              subtitle: Text(usuario.nombre),
             ),
             ListTile(
               title: Text('Edad:'),
-              subtitle: Text('28 años'),
+              subtitle: Text('${usuario.edad} años'),
             ),
 
             // Profesiones
-            Text(
+            const Text(
               'Profresiones',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Divider(),
+            const Divider(),
 
             ListTile(
               title: Text('Profesión #1:'),
