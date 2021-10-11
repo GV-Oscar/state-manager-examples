@@ -33,20 +33,12 @@ class HojaDeVidaUsuario extends StatelessWidget {
             ),
             Divider(),
             ListTile(
-              title: Text('Nombre completo:'),
+              title: Text('Nombre:'),
               subtitle: Text('Oscar David Giraldo Velasco'),
-            ),
-            ListTile(
-              title: Text('Número de cedula:'),
-              subtitle: Text('1151948300'),
             ),
             ListTile(
               title: Text('Edad:'),
               subtitle: Text('28 años'),
-            ),
-            ListTile(
-              title: Text('Titulo:'),
-              subtitle: Text('Ingeniero de Sistemas'),
             ),
 
             // Profesiones
