@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:manejo_estados/models/usuario.dart';
+import 'package:manejo_estados/services/usuario_service.dart';
+import 'package:provider/provider.dart';
 
 class Pagina1Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final usuarioService = Provider.of<UsuarioService>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Página 1'),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                usuarioService.eliminarUsuario();
+              },
+              icon: Icon(Icons.delete))
+        ],
       ),
-      body: HojaDeVidaUsuario(),
+      body: usuarioService.existeUsuario
+          ? HojaDeVidaUsuario(usuarioService.usuario)
+          : Center(
+              child: Text('No datos de usuario'),
+            ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.navigate_next),
           onPressed: () => Navigator.pushNamed(context, 'pag2')),
@@ -17,6 +33,10 @@ class Pagina1Page extends StatelessWidget {
 }
 
 class HojaDeVidaUsuario extends StatelessWidget {
+  final Usuario usuario;
+
+  const HojaDeVidaUsuario(this.usuario);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -34,11 +54,11 @@ class HojaDeVidaUsuario extends StatelessWidget {
             Divider(),
             ListTile(
               title: Text('Nombre:'),
-              subtitle: Text('Oscar David Giraldo Velasco'),
+              subtitle: Text(usuario.nombre),
             ),
             ListTile(
               title: Text('Edad:'),
-              subtitle: Text('28 años'),
+              subtitle: Text('${usuario.edad}'),
             ),
 
             // Profesiones
@@ -48,18 +68,17 @@ class HojaDeVidaUsuario extends StatelessWidget {
             ),
             Divider(),
 
+            
+            ...usuario.profesiones!
+                .map((e) => ListTile(title: Text(e)))
+                .toList()
+
+            /*
             ListTile(
               title: Text('Profesión #1:'),
               subtitle: Text('Desarrollador Android'),
-            ),
-            ListTile(
-              title: Text('Profesión #2:'),
-              subtitle: Text('Desarrollador IOS'),
-            ),
-            ListTile(
-              title: Text('Profesión #3:'),
-              subtitle: Text('Desarrollador Flutter'),
-            ),
+            )
+            */
           ],
         ),
       ),
