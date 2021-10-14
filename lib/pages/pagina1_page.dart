@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:manejo_estados/bloc/usuario/usuario_bloc.dart';
+import 'package:manejo_estados/models/usuario.dart';
 
 class Pagina1Page extends StatelessWidget {
   @override
@@ -7,8 +10,25 @@ class Pagina1Page extends StatelessWidget {
       appBar: AppBar(
         title: Text('Página 1'),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                BlocProvider.of<UsuarioBloc>(context).add(BorrarUsuario());
+              },
+              icon: Icon(Icons.delete))
+        ],
       ),
-      body: HojaDeVidaUsuario(),
+      body: BlocBuilder<UsuarioBloc, UsuarioState>(
+        builder: (_, state) {
+          if (state.existeUsuario) {
+            return HojaDeVidaUsuario(state.usuario!);
+          } else {
+            return const Center(
+              child: Text('No hay datos de usuario'),
+            );
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.navigate_next),
           onPressed: () => Navigator.pushNamed(context, 'pag2')),
@@ -17,6 +37,10 @@ class Pagina1Page extends StatelessWidget {
 }
 
 class HojaDeVidaUsuario extends StatelessWidget {
+  final Usuario usuario;
+
+  const HojaDeVidaUsuario(this.usuario);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -27,39 +51,32 @@ class HojaDeVidaUsuario extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Datos personales
-            Text(
+            const Text(
               'Datos Personales',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text('Nombre:'),
-              subtitle: Text('Oscar David Giraldo Velasco'),
+              subtitle: Text(usuario.nombre),
             ),
             ListTile(
               title: Text('Edad:'),
-              subtitle: Text('28 años'),
+              subtitle: Text('${usuario.edad}'),
             ),
 
             // Profesiones
-            Text(
+            const Text(
               'Profresiones',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Divider(),
+            const Divider(),
 
-            ListTile(
-              title: Text('Profesión #1:'),
-              subtitle: Text('Desarrollador Android'),
-            ),
-            ListTile(
-              title: Text('Profesión #2:'),
-              subtitle: Text('Desarrollador IOS'),
-            ),
-            ListTile(
-              title: Text('Profesión #3:'),
-              subtitle: Text('Desarrollador Flutter'),
-            ),
+            ...usuario.profesiones
+                .map((profesion) => ListTile(
+                      title: Text(profesion),
+                    ))
+                .toList()
           ],
         ),
       ),
