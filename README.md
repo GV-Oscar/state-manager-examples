@@ -1,4 +1,4 @@
-# Ejemplo de Gestor de estado Singleto
+# Ejemplo de Gestor de estado Singleton
 
 Este proyecto muestra un ejemplo sencillo de como utilizar singleton como gestos de estado en una aplicación
 en Flutter
